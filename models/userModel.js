@@ -21,6 +21,15 @@ const userSchema = new Schema({
     isBanned:{
         type : Boolean , 
         default :false 
+    },
+    status: {
+        type: String,
+        enum: ["Pending", "Active"],
+        default: "Pending"
+    },
+    newpassword: {
+        type: String,
+        required: false
     }
 })
 mongoose.set('strictQuery', false);
@@ -71,5 +80,34 @@ userSchema.statics.login = async function(email, password) {
 
     return user
 }
+
+// static reset pwd method
+userSchema.statics.resetpwd = async function(password, newpassword) {
+
+    // validation
+    if (!newpassword || !password) {
+        throw Error('All fields must be filled')
+    }
+    if (!validator.isStrongPassword(password)) {
+        throw Error('Password not strong enough')
+    }
+    if( password != newpassword){
+        throw Error('Password not match')
+    }
+
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(password, salt)
+
+    const match = await bcrypt.compare(password, newpassword)
+
+    if (match) {
+        throw Error('Password not match')
+    }
+
+    return match
+}
+
+
+
 
 module.exports = mongoose.model('User', userSchema)
