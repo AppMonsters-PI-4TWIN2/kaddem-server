@@ -15,11 +15,15 @@ const userSchema = new Schema({
         required: true
     },
     role: {
-        type: String,
-        default: "user",
+        type: String, 
+         default: "user",
+    },
+    isBanned:{
+        type : Boolean , 
+        default :false 
     }
 })
-
+mongoose.set('strictQuery', false);
 // static signup method
 userSchema.statics.signup = async function(email, password) {
 
