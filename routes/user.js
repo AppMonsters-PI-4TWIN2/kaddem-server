@@ -1,7 +1,7 @@
 const express = require('express')
 
 // controller functions
-const { loginUser, signupUser, FindAllUser } = require('../controllers/userController')
+const { loginUser, signupUser, FindAllUser, forgotpwd, resetpwd  } = require('../controllers/userController')
 const requireAuthAndNotBanned = require('../middleware/requireAuthAndNotBanned')
 const { route } = require('./listUser')
 
@@ -13,6 +13,13 @@ router.post('/login',loginUser)
 
 // signup route
 router.post('/signup', signupUser)
+
+//forgot password
+router.post('/forgotpwd', forgotpwd)
+
+//reset password
+
+router.put('/resetpwd', resetpwd)
 
 
 module.exports = router
