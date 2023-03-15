@@ -32,7 +32,7 @@ const loginUser = async (req, res) => {
 // signup a user
 const signupUser = async (req, res) => {
     const {email, password} = req.body
-    const URL="http://localhost:3001/login"
+    const URL="http://localhost:3000/login"
 
     try {
         const user = await User.signup(email, password)
@@ -119,7 +119,7 @@ const BannAnUser =async (req, res) => {
 
   const forgotpwd = async (req,res) => {
     const {email} = req.body
-    const URL="http://localhost:3001/resetpwd"
+    const URL="http://localhost:3000/resetpwd"
 
     try {
         const user = await User.findOne({email})
