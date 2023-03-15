@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const validator = require('validator')
-
+const {EMAIL_PROVIDER} = require("../constants");
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
@@ -12,7 +12,7 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
+
     },
     role: {
         type: String, 
@@ -30,6 +30,36 @@ const userSchema = new Schema({
     newpassword: {
         type: String,
         required: false
+    },
+    phoneNumber: {
+        type: String
+    },
+    firstName: {
+        type: String
+    },
+    lastName: {
+        type: String
+    },
+    provider: {
+        type: String,
+        required: true,
+        default: EMAIL_PROVIDER.Email
+    },
+    googleId: {
+        type: String
+    },
+    facebookId: {
+        type: String
+    },
+    avatar: {
+        type: String
+    },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
+    updated: Date,
+    created: {
+        type: Date,
+        default: Date.now
     }
 })
 mongoose.set('strictQuery', false);
@@ -80,7 +110,43 @@ userSchema.statics.login = async function(email, password) {
 
     return user
 }
+userSchema.statics.signupGoogle = async function(email, googleId) {
 
+    // validation
+    if (!email ) {
+        throw Error('All fields must be filled')
+    }
+    if (!validator.isEmail(email)) {
+        throw Error('Email not valid')
+    }
+
+
+    const exists = await this.findOne({ email })
+
+    if (exists) {
+        throw Error('Email already in use')
+    }
+
+
+
+    const user = await this.create({ email, googleId })
+
+    return user
+}
+userSchema.statics.loginGoogle = async function(email, googleId) {
+
+    if (!email) {
+        throw Error('All fields must be filled')
+    }
+
+    const user = await this.findOne({ email })
+    if (!user) {
+        throw Error('Incorrect email')
+    }
+
+
+    return user
+}
 // static reset pwd method
 userSchema.statics.resetpwd = async function(password, newpassword) {
 

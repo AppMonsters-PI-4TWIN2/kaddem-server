@@ -5,6 +5,7 @@ var router = express.Router();
 const { requireAuth ,authenticateToken} = require('../middleware/requireAuth');
 const requireAuthAndNotBanned = require('../middleware/requireAuthAndNotBanned');
 
+router.use(requireAuth)
 /* GET users listing. */
 router.get('/users', FindAllUser);
 
