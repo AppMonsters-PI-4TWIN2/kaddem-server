@@ -14,8 +14,24 @@ const loginUser = async (req, res) => {
 
         // create a token
         const token = createToken(user._id)
+        const role =user.role
 
-        res.status(200).json({email,password, token})
+        res.status(200).json({email,password, token,role})
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+}
+const loginUserGoogle = async (req, res) => {
+    const {email, googleId} = req.body
+
+    try {
+        const user = await User.loginGoogle(email, googleId)
+
+        // create a token
+        const token = createToken(user._id)
+        const role =user.role
+
+        res.status(200).json({email, token,role})
     } catch (error) {
         res.status(400).json({error: error.message})
     }
@@ -37,4 +53,20 @@ const signupUser = async (req, res) => {
     }
 }
 
-module.exports = { signupUser, loginUser }
+const signupUserGoogle = async (req, res) => {
+    const email = req.user.email
+    const googleId = req.googleId
+
+    try {
+        const user = await User.signupGoogle(email, googleId)
+
+        // create a token
+        const token = createToken(user._id)
+
+        res.status(200).json({email, token})
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+}
+
+module.exports = { signupUser, loginUser ,createToken,signupUserGoogle,loginUserGoogle}

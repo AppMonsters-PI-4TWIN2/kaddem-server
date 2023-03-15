@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const validator = require('validator')
+const {EMAIL_PROVIDER} = require("../constants");
 
 const Schema = mongoose.Schema
 
@@ -11,12 +12,42 @@ const userSchema = new Schema({
         unique: true
     },
     password: {
-        type: String,
-        required: true
+        type: String
     },
     role: {
         type: String,
         default: "user",
+        enum: ["user", "admin"]
+    },
+    phoneNumber: {
+        type: String
+    },
+    firstName: {
+        type: String
+    },
+    lastName: {
+        type: String
+    },
+    provider: {
+        type: String,
+        required: true,
+        default: EMAIL_PROVIDER.Email
+    },
+    googleId: {
+        type: String
+    },
+    facebookId: {
+        type: String
+    },
+    avatar: {
+        type: String
+    },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
+    updated: Date,
+    created: {
+        type: Date,
+        default: Date.now
     }
 })
 
@@ -47,7 +78,29 @@ userSchema.statics.signup = async function(email, password) {
 
     return user
 }
+userSchema.statics.signupGoogle = async function(email, googleId) {
 
+    // validation
+    if (!email ) {
+        throw Error('All fields must be filled')
+    }
+    if (!validator.isEmail(email)) {
+        throw Error('Email not valid')
+    }
+
+
+    const exists = await this.findOne({ email })
+
+    if (exists) {
+        throw Error('Email already in use')
+    }
+
+
+
+    const user = await this.create({ email, googleId })
+
+    return user
+}
 // static login method
 userSchema.statics.login = async function(email, password) {
 
@@ -64,6 +117,20 @@ userSchema.statics.login = async function(email, password) {
     if (!match) {
         throw Error('Incorrect password')
     }
+
+    return user
+}
+userSchema.statics.loginGoogle = async function(email, googleId) {
+
+    if (!email) {
+        throw Error('All fields must be filled')
+    }
+
+    const user = await this.findOne({ email })
+    if (!user) {
+        throw Error('Incorrect email')
+    }
+
 
     return user
 }
