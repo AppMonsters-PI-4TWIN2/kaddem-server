@@ -205,6 +205,22 @@ const BannAnUser =async (req, res) => {
             res.status(400).json({error: error.message})
         }
     }
+const updateUser = async (req, res) => {
+    const { email } = req.body
 
 
-module.exports = { signupUser, loginUser,FindAllUser ,createToken,signupUserGoogle,loginUserGoogle,DeleteUser,BannAnUser,  forgotpwd, resetpwd}
+
+    const user = await User.findOneAndUpdate({email: email}, {
+        ...req.body
+    })
+
+    if (!user) {
+        return res.status(400).json({error: 'No such user'})
+    }
+
+    res.status(200).json(user)
+
+}
+
+
+module.exports = { signupUser,updateUser, loginUser,FindAllUser ,createToken,signupUserGoogle,loginUserGoogle,DeleteUser,BannAnUser,  forgotpwd, resetpwd}

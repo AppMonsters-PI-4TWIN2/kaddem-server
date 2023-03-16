@@ -2,7 +2,7 @@ const express = require('express')
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 // controller functions
-const { loginUser, signupUser , loginUserGoogle,FindAllUser, forgotpwd, resetpwd  } = require('../controllers/userController')
+const { loginUser, signupUser ,updateUser, loginUserGoogle,FindAllUser, forgotpwd, resetpwd  } = require('../controllers/userController')
 const requireAuthAndNotBanned = require('../middleware/requireAuthAndNotBanned')
 const { route } = require('./listUser')
 const { secret, tokenLife } = require('../config/keys');
@@ -22,6 +22,8 @@ router.post('/forgotpwd', forgotpwd)
 //reset password
 
 router.put('/resetpwd', resetpwd)
+//update user
+router.put('/updateuser',updateUser)
 router.post('/loginGoogle',loginUserGoogle )
 
 router.get(

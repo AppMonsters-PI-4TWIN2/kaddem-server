@@ -60,6 +60,9 @@ const userSchema = new Schema({
     created: {
         type: Date,
         default: Date.now
+    },
+    aboutMe: {
+        type: String
     }
 })
 mongoose.set('strictQuery', false);
@@ -74,7 +77,7 @@ userSchema.statics.signup = async function(email, password) {
         throw Error('Email not valid')
     }
     if (!validator.isStrongPassword(password)) {
-        throw Error('Password not strong enough')
+        throw Error('Password not strong enough,Must contain at least one number and one special symbol')
     }
 
     const exists = await this.findOne({ email })
