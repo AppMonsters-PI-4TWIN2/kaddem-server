@@ -52,9 +52,11 @@ const userSchema = new Schema({
         type: String
     },
     avatar: {
-        type: String
+        type: String,
+        default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiPIGaj3zV2VbDQxmjKhx7_nhuHagTs0X_Nw&usqp=CAU"
     },
     resetPasswordToken: { type: String },
+    verificationToken:{ type: String },
     resetPasswordExpires: { type: Date },
     updated: Date,
     created: {
@@ -62,7 +64,21 @@ const userSchema = new Schema({
         default: Date.now
     },
     aboutMe: {
-        type: String
+        type: String,
+        default:""
+    },
+
+    country:{
+        type:String,
+        default:""
+    },
+    region:{
+        type:String,
+        default:""
+    },
+    userName:{
+        type:String,
+        unique: true
     }
 })
 mongoose.set('strictQuery', false);
