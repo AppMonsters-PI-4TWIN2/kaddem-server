@@ -4,6 +4,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const userRoutes = require('./routes/user')
 const listUser = require('./routes/listUser')
+const postRoutes = require('./routes/post')
 
 
 // express app
@@ -20,6 +21,9 @@ app.use((req, res, next) => {
 // routes
 app.use('/api/user', userRoutes)
 app.use('/list',listUser)
+app.use('/post',postRoutes )
+
+app.use("/posts", express.static("public"));
 
 require('./config/passport')(app);
 // connect to db
