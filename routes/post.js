@@ -2,6 +2,7 @@ const express = require('express')
 const {getPosts,
     createPost ,
     deletePost,
+    editPost,
     likePost,
    addComment,
    deleteComment,
@@ -15,9 +16,10 @@ const uploadPost = require("../middleware/userMulter.js");
 
 const router = express.Router();
 
-router.get("/getPosts",getPosts);
+router.get("/getPosts/:token",getPosts);
 router.post("/createPost",uploadPost,createPost);
 router.delete("/deletePost",deletePost);
+router.put("/editPost/:id",editPost);
 router.post("/likePost",likePost);
 router.post("/addComment",addComment);
 router.put("/deleteComment",deleteComment);

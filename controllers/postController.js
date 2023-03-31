@@ -8,7 +8,7 @@ const User = require ("../models/userModel.js") ;
  const getPosts = async (req, res) => {
     const { token } = req.params;
     const decodedToken = jwt.decode(token ,process.env.secret);
-    const userId = decodedToken.id;
+    const userId = decodedToken._id;
     try {
         Post.find({ owner: userId }).populate({
             path: 'owner',
@@ -242,6 +242,7 @@ const User = require ("../models/userModel.js") ;
   module.exports = {getPosts,
     createPost ,
     deletePost,
+    editPost,
     likePost,
    addComment,
    deleteComment,
