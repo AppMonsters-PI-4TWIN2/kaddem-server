@@ -17,6 +17,7 @@ const loginUser = async (req, res) => {
         const user = await User.login(email, password)
         if(user.isBanned==false )
         {
+        const id =user.id    
         const role = user.role
         const firstName=user.firstName
         const lastName=user.lastName
@@ -28,8 +29,10 @@ const loginUser = async (req, res) => {
         const userName=user.userName
         // create a token
         const token = createToken(user._id)
-         res.status(200).json({email,role, token,firstName,lastName,avatar,aboutMe,country,region,phoneNumber,userName})
-    } else {
+        jwt.sign({userId:user._id,email,firstName,lastName}, process.env.JWT_SECRET, {}, (err, token) => {
+         res.status(200).cookie('token', token, {sameSite:'lax', secure:true}).json({id,email,role, token,firstName,lastName,avatar,aboutMe,country,region,phoneNumber,userName})
+        }) ;
+        } else {
       res.status(403).json({error: 'Accès interdit you are banned'});
     }
     } catch (error) {
@@ -54,7 +57,9 @@ const loginUserGoogle = async (req, res) => {
         const phoneNumber=user.phoneNumber
         const userName=user.userName
 
-        res.status(200).json({email,role, token,firstName,lastName,avatar,aboutMe,country,region,phoneNumber,userName})
+        jwt.sign({userId:user._id,email,firstName , lastName}, process.env.JWT_SECRET, {}, (err, token) => {
+            res.status(200).cookie('token', token, {sameSite:'lax', secure:true}).json({email,role, token,firstName,lastName,avatar,aboutMe,country,region,phoneNumber,userName})
+           }) ;   
     } catch (error) {
         res.status(400).json({error: error.message})
     }
@@ -69,9 +74,12 @@ const signupUser = async (req, res) => {
 
         // create a token
         const token = createToken(user._id)
-
-        res.status(200).json({email, token, message: "User added successfully ... plz verify your email to activate the account"})
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      
+        const id =user.id  
+        jwt.sign({userId:user._id,email}, process.env.JWT_SECRET, {}, (err, token) => {
+        res.cookie('token', token, {sameSite:'lax', secure:true}).status(200).json({email,id , token, message: "User added successfully ... plz verify your email to activate the account"})
+    });
+     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
             const msg = {
                 to: email,
                 from: "Kaddemproject@gmail.com",
