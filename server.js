@@ -4,17 +4,17 @@ const express = require('express')
 const mongoose = require('mongoose')
 const userRoutes = require('./routes/user')
 const listUser = require('./routes/listUser')
+
 const User = require('./models/userModel')
 const chatRoute =require('./routes/chat')
 //chat 
-
 const jwt = require('jsonwebtoken')
 const Message =require('./models/Message')
 const cookieParser = require('cookie-parser');
 const jwtSecret =  process.env.jwt_Secret
 const ws =require('ws')
 
-
+const postRoutes = require('./routes/post')
 // express app
 const app = express()
 
@@ -31,11 +31,13 @@ app.use((req, res, next) => {
 // routes
 app.use('/api/user', userRoutes)
 app.use('/list',listUser)
+
 app.use('/chat',chatRoute)
 
 
+app.use('/post',postRoutes )
 
-
+app.use("/posts", express.static("public"));
 
 
 require('./config/passport')(app);
@@ -115,7 +117,7 @@ if(recipient && text){
         sender:connection.userId,
         recipient , 
         _id:messageDoc._id
-        })))             ; 
+        })))   ; 
           
 }
 
