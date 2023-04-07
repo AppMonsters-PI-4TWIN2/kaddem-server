@@ -3,7 +3,8 @@ const { token } = require('morgan');
 var router = express.Router();
  const {FindAllUser,DeleteUser,BannAnUser }= require('../controllers/userController');
 const  requireAuth  = require('../middleware/requireAuth');
-
+const User = require('../models/userModel');
+const { app } = require('../config/keys');
 router.use(requireAuth)
 /* GET users listing. */
 router.get('/users', FindAllUser);
@@ -11,6 +12,8 @@ router.get('/users', FindAllUser);
 router.delete('/users/:id',DeleteUser) ;
 
 router.put('/users/ban/:id', BannAnUser );
+
+
 
 
 module.exports = router;

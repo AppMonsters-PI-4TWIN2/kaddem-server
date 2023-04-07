@@ -57,7 +57,7 @@ const loginUserGoogle = async (req, res) => {
         const phoneNumber=user.phoneNumber
         const userName=user.userName
 
-        jwt.sign({userId:user._id,email,firstName , lastName}, process.env.JWT_SECRET, {}, (err, token) => {
+        jwt.sign({userId:user._id,email,firstName ,token , lastName}, process.env.JWT_SECRET, {}, (err, token) => {
             res.status(200).cookie('token', token, {sameSite:'lax', secure:true}).json({email,role, token,firstName,lastName,avatar,aboutMe,country,region,phoneNumber,userName})
            }) ;   
     } catch (error) {

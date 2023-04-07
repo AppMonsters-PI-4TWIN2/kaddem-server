@@ -4,10 +4,10 @@ const express = require('express')
 const mongoose = require('mongoose')
 const userRoutes = require('./routes/user')
 const listUser = require('./routes/listUser')
-
 const User = require('./models/userModel')
 const chatRoute =require('./routes/chat')
 //chat 
+const fs =require('fs')
 const jwt = require('jsonwebtoken')
 const Message =require('./models/Message')
 const cookieParser = require('cookie-parser');
@@ -17,7 +17,7 @@ const ws =require('ws')
 const postRoutes = require('./routes/post')
 // express app
 const app = express()
-
+app.use('/uploads', express.static(__dirname + '/uploads'));
 // middleware
 app.use(express.json())
 
@@ -31,7 +31,6 @@ app.use((req, res, next) => {
 // routes
 app.use('/api/user', userRoutes)
 app.use('/list',listUser)
-
 app.use('/chat',chatRoute)
 
 
@@ -39,6 +38,22 @@ app.use('/post',postRoutes )
 
 app.use("/posts", express.static("public"));
 
+app.get('/users/:email', async (req, res) => {
+  try {
+    // Récupérer l'utilisateur en utilisant son adresse e-mail
+    const user = await User.findOne({ email: req.params.email }).select('firstName lastName');
+
+    if (!user) {
+      return res.status(404).json({ message: "L'utilisateur n'existe pas." });
+    }
+
+    // Retourner le prénom et le nom de famille de l'utilisateur
+    res.json({ firstName: user.firstName, lastName: user.lastName });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Une erreur est survenue.' });
+  }
+});
 
 require('./config/passport')(app);
 // connect to db
@@ -101,12 +116,23 @@ const cookies = req.headers.cookie;
 connection.on('message',async (message ) => {
 const messageData = JSON.parse( message.toString() );   
 console.log(messageData) 
-const{recipient , text } =messageData 
-if(recipient && text){
+const{recipient , text ,file} =messageData 
+if(file){
+  const parts = file.name.split('.');
+  const ext = parts[parts.length - 1];
+  filename = Date.now() + '.'+ext;
+  const path = __dirname + '/uploads/' + filename;
+  const bufferData = new Buffer(file.data.split(',')[1], 'base64');
+fs.writeFile(path, bufferData, () => {
+   console.log('file saved:'+path);
+      });
+}
+if(recipient && (text || file)){
   const messageDoc =  await Message.create({
       sender:connection.userId , 
       recipient , 
-      text  
+      text  ,
+      file :filename || null , 
     });
 
 
@@ -116,6 +142,7 @@ if(recipient && text){
         text,
         sender:connection.userId,
         recipient , 
+        file :file ? filename : null ,
         _id:messageDoc._id
         })))   ; 
           

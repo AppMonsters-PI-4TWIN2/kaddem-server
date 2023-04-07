@@ -7,6 +7,7 @@ const Message =require('../models/Message');
 const jwt = require('jsonwebtoken')
 /* GET users . */
 const jwtSecret =  process.env.jwt_Secret
+
 async function getUserFromRequest(req) {
     return new Promise((resolve, reject)=> {
       const token = req.cookies?.token ;
