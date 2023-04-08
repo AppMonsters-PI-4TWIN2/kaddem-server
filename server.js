@@ -15,6 +15,7 @@ const jwtSecret =  process.env.jwt_Secret
 const ws =require('ws')
 
 const postRoutes = require('./routes/post')
+const projectRoutes=require('./routes/Project')
 // express app
 const app = express()
 app.use('/uploads', express.static(__dirname + '/uploads'));
@@ -32,10 +33,9 @@ app.use((req, res, next) => {
 app.use('/api/user', userRoutes)
 app.use('/list',listUser)
 app.use('/chat',chatRoute)
-
-
+//Project Routes
+app.use('/api/project', projectRoutes)
 app.use('/post',postRoutes )
-
 app.use("/posts", express.static("public"));
 
 app.get('/users/:email', async (req, res) => {
