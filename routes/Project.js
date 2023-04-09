@@ -2,15 +2,14 @@ const express = require('express')
 const {
     createProject,
     deleteProject,
-    getProjects,
     getProject,
-    updateProject
+    updateProject, FindAllProjects
 } = require('../controllers/projectController')
 
 const router = express.Router()
 
 // GET all Projects
-router.get('/', getProjects)
+router.get('/projects', FindAllProjects)
 
 // GET a single Project
 router.get('/:ProjectName', getProject)
