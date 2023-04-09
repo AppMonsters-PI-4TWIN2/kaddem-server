@@ -6,6 +6,7 @@ const userRoutes = require('./routes/user')
 const listUser = require('./routes/listUser')
 const User = require('./models/userModel')
 const chatRoute =require('./routes/chat')
+const investmentRoute = require('./routes/investment')
 //chat 
 const fs =require('fs')
 const jwt = require('jsonwebtoken')
@@ -32,7 +33,7 @@ app.use((req, res, next) => {
 app.use('/api/user', userRoutes)
 app.use('/list',listUser)
 app.use('/chat',chatRoute)
-
+app.use('/investment',investmentRoute)
 
 app.use('/post',postRoutes )
 
