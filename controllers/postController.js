@@ -1,8 +1,24 @@
+const dotenv = require('dotenv')
 const Post = require ("../models/postModel.js") ;
-const  jwt  = require ("jsonwebtoken") ;
+const jwt = require('jsonwebtoken')
 const mongoose = require ("mongoose") ;
 const Comment = require ("../models/commentModel.js") ;
 const User = require ("../models/userModel.js") ;
+dotenv.config()
+
+
+
+const FindAllPosts = async (req, res) => {
+  try {
+        const posts = await Post.find();
+
+   res.status(200).json(posts);
+ 
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 // get user's post 
  const getPosts = async (req, res) => {
@@ -27,26 +43,28 @@ const User = require ("../models/userModel.js") ;
     }
 }
 
-// create a post that contains the caption and the image
- const createPost = async (req, res) => {
-    const { token,caption } = req.body;
-    console.log(token);
-    console.log(caption);
-    const decodedToken = jwt.decode(token ,process.env.secret);
-    const userId = decodedToken._id;
-    // upload the image to the server
-    const image = `${req.protocol}://localhost:4000/posts/${
-          req.file.filename
-        }`
-    const newPost = new Post({ caption: caption, owner: userId, image });
-    try {
-        await newPost.save();
+ //create a post that contains the caption and the image
+  const createPost = async (req, res) => {
+     const { caption } = req.body;
+     const token = req.headers.authorization.split(' ')[1];
+     console.log(token);
+     console.log(caption);
+     const decodedToken = jwt.decode(token ,process.env.secret);
+     const userId = decodedToken.userId;
+     console.log(userId)
+     // upload the image to the server
+     const image = `${req.protocol}://localhost:4000/posts/${
+           req.file.filename
+         }`
+         //
+     const newPost = new Post({ caption: caption, owner: userId , image });
+     try {
+         await newPost.save();
         res.status(201).json(newPost);
-    } catch (error) {
+     } catch (error) {
         res.status(409).json({ message: error.message });  
-    }
-}
-
+     }
+ }
  
  const deletePost = async (req, res) => {
     const { id } = req.params;
@@ -239,7 +257,8 @@ const User = require ("../models/userModel.js") ;
     return res.status(200).json(comment);
   };
 
-  module.exports = {getPosts,
+  module.exports = {FindAllPosts,
+    getPosts,
     createPost ,
     deletePost,
     editPost,

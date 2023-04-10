@@ -3,11 +3,17 @@ const mongoose = require('mongoose')
 const User = require("../models/userModel");
 
 // get all Projects
-const getProjects = async (req, res) => {
-    const projects = await Project.find({}).sort({createdAt: -1})
+const FindAllProjects = async (req, res) => {
+    try {
+        const projects = await Project.find();
 
-    res.status(200).json(projects)
-}
+        res.status(200).json(projects);
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 // get a single project
 const getProject = async (req, res) => {
@@ -42,11 +48,34 @@ const createProject = async (req, res) => {
 }
 
 const deleteProject = async (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({error: 'No such project'})
+    }
+
+    const project = await Project.findOneAndDelete({_id: id})
+
+    if(!project) {
+        return res.status(400).json({error: 'No such project'})
+    }
+
+    res.status(200).json(project)
 
 }
 
 const updateProject = async (req, res) => {
+    const { ProjectName } = req.params
 
+    const project = await Project.findOneAndUpdate({ProjectName: ProjectName}, {
+        ...req.body
+    })
+
+    if (!project) {
+        return res.status(400).json({error: 'No such project'})
+    }
+
+    res.status(200).json(project)
 }
 const projectName =async (req, res) => {
     try {
@@ -77,7 +106,7 @@ const projectName =async (req, res) => {
     }
   };
 module.exports = {
-    getProjects,
+    FindAllProjects,
     getProject,
     createProject,
     deleteProject,
