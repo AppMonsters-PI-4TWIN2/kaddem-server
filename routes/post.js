@@ -1,5 +1,7 @@
+const  requireAuth  = require('../middleware/requireAuth');
 const express = require('express')
-const {getPosts,
+const {FindAllPosts,
+    getPosts,
     createPost ,
     deletePost,
     editPost,
@@ -15,8 +17,9 @@ const uploadPost = require("../middleware/userMulter.js");
 
 
 const router = express.Router();
-
-router.get("/getPosts/:token",getPosts);
+router.use(requireAuth)
+router.get("/posts",FindAllPosts);
+router.get("/getPosts",getPosts);
 router.post("/createPost",uploadPost,createPost);
 router.delete("/deletePost",deletePost);
 router.put("/editPost/:id",editPost);
