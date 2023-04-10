@@ -26,7 +26,7 @@ router.put("/editPost/:id",editPost);
 router.post("/likePost",likePost);
 router.post("/addComment",addComment);
 router.put("/deleteComment",deleteComment);
-router.get("/getComments/:id",getComments);
+router.get("/getComments",getComments);
 router.patch("/editcomment/:id", editComment);
 router.patch("/likeComment",likeComment);
 

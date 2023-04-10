@@ -131,9 +131,11 @@ const FindAllPosts = async (req, res) => {
    
 // add a comment to a post
  const addComment = async (req, res) => {
-  const { token, postId, content } = req.body;
+  const {postId, content } = req.body;
+  const token = req.headers.authorization.split(' ')[1];
+  console.log(token);
   const decodedToken = jwt.decode(token, process.env.secret);
-  const userId = decodedToken.id;
+  const userId = decodedToken.userId;
   if (!mongoose.Types.ObjectId.isValid(postId)) {
     return res.status(404).send(`No post with id: ${postId}`);
   }
@@ -188,7 +190,7 @@ const FindAllPosts = async (req, res) => {
 
   // Get comments of a post
  const getComments = async (req, res) => {
-    const postId = req.params.id;
+    const {postId} = req.body;
   
     try {
        await Comment.find({ post: postId })
