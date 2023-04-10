@@ -65,13 +65,9 @@ const deleteProject = async (req, res) => {
 }
 
 const updateProject = async (req, res) => {
-    const { id } = req.params
+    const { ProjectName } = req.params
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({error: 'No such Project'})
-    }
-
-    const project = await Project.findOneAndUpdate({_id: id}, {
+    const project = await Project.findOneAndUpdate({ProjectName: ProjectName}, {
         ...req.body
     })
 

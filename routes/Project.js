@@ -21,6 +21,6 @@ router.post('/new', createProject)
 router.delete('/:id', deleteProject)
 
 // UPDATE a Project
-router.patch('/:id', updateProject)
+router.put('/:ProjectName', updateProject)
 
 module.exports = router
