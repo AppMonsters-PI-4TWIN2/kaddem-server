@@ -50,21 +50,38 @@ const updateProject = async (req, res) => {
 }
 const projectName =async (req, res) => {
     try {
-      const project = await Project.findById(req.params.id).select('ProjectName Category');
+      const project = await Project.findById(req.params.id).select('ProjectName Category Creator');
       if (!project) {
         return res.status(404).json({ message: 'Project not found' });
       }
-      res.json({ projectName: project.ProjectName, category: project.Category });
+      res.json({ projectName: project.ProjectName, category: project.Category, creator :project.Creator});
  
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Une erreur est survenue.' });
       }
   }
+
+
+  const decreaseProjectMontant = async (projectId, amount) => {
+    try {
+      const project = await Project.findById(projectId);
+      if (!project) {
+        throw new Error("Project not found");
+      }
+      project.AmountAlreadyRaised -= amount;
+      await project.save();
+      return project;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
 module.exports = {
     getProjects,
     getProject,
     createProject,
     deleteProject,
-    updateProject ,projectName
+    updateProject ,
+    projectName ,
+    decreaseProjectMontant
 }

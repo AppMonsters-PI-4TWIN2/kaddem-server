@@ -62,11 +62,16 @@ const validInvestment =async (req, res) => {
       const investment = await Investment.findById(req.params.id);
       if (!investment) {
         return res.status(404).json({ message: 'investement non trouvé' });
-      }else if(investment.isValid == false)
-   {   investment.isValid = true;
+     
+      }
+      else if(investment.isValid == false)
+      {  
+     investment.isValid = true;
       await investment.save();
-      res.json({ message: 'Utilisateur banni avec succès' });}
-      else   {  
+      res.json({ message: 'Utilisateur banni avec succès' });
+      }
+      else 
+        {  
         investment.isValid = false;
         await investment.save();
         res.json({ message: 'Utilisateur debanni avec succès' });}

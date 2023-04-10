@@ -260,6 +260,21 @@ const updateUser = async (req, res) => {
     res.status(200).json(user)
 
 }
+const firstNameAndLastname = async (req, res) => {
+    try {
+      // Récupérer l'utilisateur en utilisant son adresse e-mail
+      const user = await User.findById(req.params.id).select('firstName lastName');
+  
+      if (!user) {
+        return res.status(404).json({ message: "L'utilisateur n'existe pas." });
+      }
+  
+      // Retourner le prénom et le nom de famille de l'utilisateur
+      res.json({ firstName: user.firstName, lastName: user.lastName });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Une erreur est survenue.' });
+    } 
+}
 
-
-module.exports = { signupUser,updateUser, loginUser,FindAllUser ,createToken,signupUserGoogle,loginUserGoogle,DeleteUser,BannAnUser,  forgotpwd, resetpwd,findUser}
+module.exports = { signupUser,updateUser, loginUser,FindAllUser ,createToken,firstNameAndLastname,signupUserGoogle,loginUserGoogle,DeleteUser,BannAnUser,  forgotpwd, resetpwd,findUser}

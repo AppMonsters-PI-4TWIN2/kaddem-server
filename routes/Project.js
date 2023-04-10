@@ -5,7 +5,8 @@ const {
     getProjects,
     getProject,
     updateProject,
-    projectName
+    projectName,
+    decreaseProjectMontant
 } = require('../controllers/projectController')
 
 const router = express.Router()
@@ -21,10 +22,11 @@ router.post('/new', createProject)
 
 // DELETE a Project
 router.delete('/:id', deleteProject)
-
+    
 // UPDATE a Project
 router.patch('/:id', updateProject)
 
+router.put('/amount/:id/:amount',decreaseProjectMontant)
 
 router.get('/name/:id', projectName);
 

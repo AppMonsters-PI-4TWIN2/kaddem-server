@@ -48,11 +48,9 @@ app.get('/users/:email', async (req, res) => {
   try {
     // Récupérer l'utilisateur en utilisant son adresse e-mail
     const user = await User.findOne({ email: req.params.email }).select('firstName lastName');
-
     if (!user) {
       return res.status(404).json({ message: "L'utilisateur n'existe pas." });
     }
-
     // Retourner le prénom et le nom de famille de l'utilisateur
     res.json({ firstName: user.firstName, lastName: user.lastName });
   } catch (error) {

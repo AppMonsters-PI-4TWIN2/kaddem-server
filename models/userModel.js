@@ -41,8 +41,8 @@ const userSchema = new Schema({
         type: String
     },
     provider: {
-        type: String,
-        required: true,
+            type: String,
+            required: true,
         default: EMAIL_PROVIDER.Email
     },
     googleId: {
