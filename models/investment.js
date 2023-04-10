@@ -7,8 +7,10 @@ idUser:{
  } ,
 idProject : {
     
-    type : mongoose.Schema.Types.ObjectId,
-    ref:'Project'} , 
+    type: String ,
+    // type : mongoose.Schema.Types.ObjectId,
+    // ref:'Project'
+} , 
 montant :{
     type: Number,
     required: true,
