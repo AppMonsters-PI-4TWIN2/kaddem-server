@@ -44,7 +44,7 @@ console.log(error.message)
     }
 }
 
-const updateInvestment = async (req, res) => {
+const updateInvestment1 = async (req, res) => {
 //     const { id } = req.body
 //    const investment = await Investment.findOneAndUpdate({_id: id}, {
 //         ...req.body
@@ -66,7 +66,7 @@ const validInvestment =async (req, res) => {
       }
       else if(investment.isValid == false)
       {  
-     investment.isValid = true;
+       investment.isValid = true;
       await investment.save();
       res.json({ message: 'Utilisateur banni avec succès' });
       }
@@ -83,5 +83,23 @@ const validInvestment =async (req, res) => {
 
 
 
+  const updateInvestment = async (req, res) => {
+    const { id } = req.params;
+    const { isValid } = req.body;
+  
+    try {
+      const investment = await Investment.findByIdAndUpdate(id, { isValid }, { new: true });
+  
+      if (!investment) {
+        return res.status(404).json({ error: 'Investment not found' });
+      }
+  
+      return res.json(investment);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Server error' });
+    }
+  }
 
-module.exports ={findAllInvestment,addInvestment,DeleteInvestment,updateInvestment,validInvestment}
+
+module.exports ={findAllInvestment,addInvestment,updateInvestment ,DeleteInvestment,updateInvestment,validInvestment}
