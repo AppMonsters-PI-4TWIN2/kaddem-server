@@ -33,7 +33,17 @@ const getProject = async (req, res) => {
         res.status(500).json({error: error.message})
     }
 }
-
+const getProjectsByCreator = async (req, res) => {
+    try {
+        const { Creator } = req.params
+        const projects = await Project.find({Creator:Creator})
+        res.status(200).json(projects);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({error: error.message})
+    }
+}
 // create a new project
 const createProject = async (req, res) => {
     const {ProjectName, Description, DetailedDescription,Team,LegalConsiderations,AmountAlreadyRaised,Category,ImpactOrGoal,FundingGoal,ProjectLocation,FundingModel,Website,Stage,FundingDeadline,Creator,Image} = req.body
@@ -112,5 +122,6 @@ module.exports = {
     deleteProject,
     updateProject ,
     projectName ,
-    decreaseProjectMontant
+    decreaseProjectMontant,
+    getProjectsByCreator
 }

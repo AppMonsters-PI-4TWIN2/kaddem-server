@@ -3,7 +3,7 @@ const {
     createProject,
     deleteProject,
     getProject,
-
+    getProjectsByCreator,
     updateProject,
     projectName,
     decreaseProjectMontant,
@@ -19,6 +19,9 @@ router.get('/projects', FindAllProjects)
 
 // GET a single Project
 router.get('/:ProjectName', getProject)
+
+// GET Projects by creatorId
+router.get('/projects/:Creator', getProjectsByCreator)
 
 // POST a new Project
 router.post('/new', createProject)

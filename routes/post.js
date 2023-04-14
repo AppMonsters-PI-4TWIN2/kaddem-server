@@ -18,7 +18,7 @@ const uploadPost = require("../middleware/userMulter.js");
 
 const router = express.Router();
 router.use(requireAuth)
-router.get("/posts",FindAllPosts);
+router.get("/posts/:LoggedInUser",FindAllPosts);
 router.get("/getPosts",getPosts);
 router.post("/createPost",uploadPost,createPost);
 router.delete("/deletePost",deletePost);
