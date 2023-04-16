@@ -12,7 +12,10 @@ const postSchema = new Schema({
          type: String,
          required: true,
      },
-     image: {
+    project : {
+    type : mongoose.Schema.Types.ObjectId,ref:'projects'
+    },
+image: {
          type: String,
      },
      likes: [

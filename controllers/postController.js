@@ -3,6 +3,7 @@ const Post = require ("../models/postModel.js") ;
 const jwt = require('jsonwebtoken')
 const mongoose = require ("mongoose") ;
 const Comment = require ("../models/commentModel.js") ;
+const Investment = require ("../models/investment") ;
 const User = require ("../models/userModel.js") ;
 dotenv.config()
 
@@ -10,7 +11,31 @@ dotenv.config()
 
 const FindAllPosts = async (req, res) => {
   try {
-        const posts = await Post.find();
+
+      const { LoggedInUser } = req.params;
+      // First, find all the investments made by the investor
+      const investments = await Investment.find({ idUser: LoggedInUser });
+
+        // Create an array to store all the project IDs
+      const projectIds = [];
+
+        // Loop through each investment and push its project ID to the projectIds array
+      investments.forEach(investment => {
+          projectIds.push(investment.idProject);
+      });
+
+      // Use the projectIds array to find all the posts of the projects the investor has invested in
+      const posts = await Post.find({
+          $or: [
+              { project: { $in: projectIds } }, // Find posts where the project ID is in projectIds
+              { owner: LoggedInUser } // Find posts where the owner is the LoggedInUser
+          ]
+      }).populate({
+        path: 'owner',
+        select: 'userName avatar',
+      }).sort({ createdAt: 1 });
+
+// posts variable now contains all the posts created before the current date, for the projects the investor has invested in
 
    res.status(200).json(posts);
  
@@ -45,7 +70,7 @@ const FindAllPosts = async (req, res) => {
 
  //create a post that contains the caption and the image
   const createPost = async (req, res) => {
-     const { caption } = req.body;
+     const { caption,project } = req.body;
      const token = req.headers.authorization.split(' ')[1];
      console.log(token);
      console.log(caption);
@@ -57,7 +82,7 @@ const FindAllPosts = async (req, res) => {
            req.file.filename
          }`
          //
-     const newPost = new Post({ caption: caption, owner: userId , image });
+     const newPost = new Post({ caption: caption, owner: userId , image,project:project });
      try {
          await newPost.save();
         res.status(201).json(newPost);
@@ -196,7 +221,7 @@ const FindAllPosts = async (req, res) => {
        await Comment.find({ post: postId })
      .populate({
         path: 'owner',
-        select: 'username avatar',
+        select: 'userName avatar',
       }).sort({ createdAt: -1 }).exec((err, posts) => {
         if (err) {
             res.status(404).json({ message: err.message });

@@ -47,6 +47,7 @@ const loginUserGoogle = async (req, res) => {
 
         // create a token
         const token = createToken(user._id)
+        const id =user.id
         const role = user.role
         const firstName=user.firstName
         const lastName=user.lastName
@@ -58,7 +59,7 @@ const loginUserGoogle = async (req, res) => {
         const userName=user.userName
 
         jwt.sign({userId:user._id,email,firstName ,token , lastName}, process.env.JWT_SECRET, {}, (err, token) => {
-            res.status(200).cookie('token', token, {sameSite:'lax', secure:true}).json({email,role, token,firstName,lastName,avatar,aboutMe,country,region,phoneNumber,userName})
+            res.status(200).cookie('token', token, {sameSite:'lax', secure:true}).json({id,email,role, token,firstName,lastName,avatar,aboutMe,country,region,phoneNumber,userName})
            }) ;   
     } catch (error) {
         res.status(400).json({error: error.message})
