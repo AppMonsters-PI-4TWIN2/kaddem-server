@@ -30,6 +30,9 @@ const FindAllPosts = async (req, res) => {
               { project: { $in: projectIds } }, // Find posts where the project ID is in projectIds
               { owner: LoggedInUser } // Find posts where the owner is the LoggedInUser
           ]
+      }).populate({
+        path: 'owner',
+        select: 'userName avatar',
       }).sort({ createdAt: 1 });
 
 // posts variable now contains all the posts created before the current date, for the projects the investor has invested in
@@ -218,7 +221,7 @@ const FindAllPosts = async (req, res) => {
        await Comment.find({ post: postId })
      .populate({
         path: 'owner',
-        select: 'username avatar',
+        select: 'userName avatar',
       }).sort({ createdAt: -1 }).exec((err, posts) => {
         if (err) {
             res.status(404).json({ message: err.message });
