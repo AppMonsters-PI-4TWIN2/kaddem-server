@@ -16,8 +16,9 @@ montant :{
     required: true,
 },
 isValid :{
-    type :Boolean ,
-    default :false , 
+    type: String,
+    enum: ['accepted', 'No response', 'Not Accepted'],
+    default: 'No response'
 }
 
 },{timestamps:true});

@@ -136,7 +136,7 @@ if(recipient && (text || file)){
       sender:connection.userId , 
       recipient , 
       text  ,
-      file :filename || null , 
+      file :file ? filename : null ,
     });
 
 
