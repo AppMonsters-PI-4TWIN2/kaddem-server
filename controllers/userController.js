@@ -146,6 +146,25 @@ const findUser=async (req,res) =>{
     }
 
 }
+
+const findUserById=async (req,res) =>{
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        }
+        else   {
+
+            res.status(200).json(user);
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({error: error.message})
+    }
+
+}
+
 const FindAllUser = async (req, res) => {
     try {
           const users = await User.find({ role: 'user' });
@@ -278,4 +297,4 @@ const firstNameAndLastname = async (req, res) => {
     } 
 }
 
-module.exports = { signupUser,updateUser, loginUser,FindAllUser ,createToken,firstNameAndLastname,signupUserGoogle,loginUserGoogle,DeleteUser,BannAnUser,  forgotpwd, resetpwd,findUser}
+module.exports = { signupUser,updateUser, loginUser,FindAllUser ,createToken,firstNameAndLastname,signupUserGoogle,loginUserGoogle,DeleteUser,BannAnUser,  forgotpwd, resetpwd,findUser,findUserById}
