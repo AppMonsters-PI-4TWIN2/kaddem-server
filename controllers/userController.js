@@ -277,7 +277,21 @@ const updateUser = async (req, res) => {
         return res.status(400).json({error: 'No such user'})
     }
 
-    res.status(200).json(user)
+    const id =user.id
+    const role = user.role
+    const firstName=user.firstName
+    const lastName=user.lastName
+    const avatar=user.avatar
+    const aboutMe=user.aboutMe
+    const country=user.country
+    const region=user.region
+    const phoneNumber=user.phoneNumber
+    const userName=user.userName
+    // create a token
+    const token = createToken(user._id)
+    jwt.sign({userId:user._id,email,firstName,lastName}, process.env.JWT_SECRET, {}, (err, token) => {
+        res.status(200).cookie('token', token, {sameSite:'lax', secure:true}).json({id,email,role, token,firstName,lastName,avatar,aboutMe,country,region,phoneNumber,userName})
+    }) ;
 
 }
 const firstNameAndLastname = async (req, res) => {
