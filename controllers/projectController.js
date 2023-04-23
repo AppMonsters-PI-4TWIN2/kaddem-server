@@ -102,7 +102,7 @@ const projectName =async (req, res) => {
       if (!project) {
         return res.status(404).json({ message: 'Project not found' });
       }
-      res.json({ projectName: project.ProjectName, category: project.Category, creator :project.Creator});
+      res.json({ projectName: project.ProjectName, category: project.Category, creator :project.Creator,id:project.id});
  
     } catch (error) {
         console.error(error);
@@ -137,6 +137,19 @@ res.send(result)
   }
 
 
+const incrementAmountAlreadyRaised = async (req, res) => {
+    const projectId = req.params.id; // get the project ID from the request parameters
+    const montant = Number(req.params.montant); // get the amount to increment from the request parameters
+
+    Project.findByIdAndUpdate(projectId, { $inc: { AmountAlreadyRaised: montant } }, { new: true })
+        .then(updatedProject => {
+            res.status(200).json(updatedProject); // return the updated project as a JSON response
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ error: 'Server error' });
+        });
+}
 module.exports = {
     search,
     FindAllProjects,
@@ -146,5 +159,6 @@ module.exports = {
     updateProject ,
     projectName ,
     decreaseProjectMontant,
-    getProjectsByCreator
+    getProjectsByCreator,
+    incrementAmountAlreadyRaised
 }

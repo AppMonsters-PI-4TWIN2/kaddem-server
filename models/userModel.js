@@ -78,7 +78,6 @@ const userSchema = new Schema({
     },
     userName:{
         type:String,
-        unique: true
     }
 })
 mongoose.set('strictQuery', false);

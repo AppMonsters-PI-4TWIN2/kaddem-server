@@ -8,8 +8,12 @@ const {
     projectName,
     decreaseProjectMontant,
 
+
     FindAllProjects,
-    search
+    search,
+
+    incrementAmountAlreadyRaised,
+    
 
 } = require('../controllers/projectController')
 
@@ -33,6 +37,8 @@ router.delete('/:id', deleteProject)
 // UPDATE a Project
 router.put('/:ProjectName', updateProject)
 
+// UPDATE a Project
+router.patch('/incrementAmountAlreadyRaised/:id/:montant', incrementAmountAlreadyRaised)
 router.put('/amount/:id/:amount',decreaseProjectMontant)
 
 router.get('/name/:id', projectName);
