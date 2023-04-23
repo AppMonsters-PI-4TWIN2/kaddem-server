@@ -4,6 +4,7 @@ const bcryptjs = require('bcryptjs')
 dotenv.config()
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
+const userModel = require('../models/userModel')
 
 const createToken = (_id) => {
     return jwt.sign({_id}, process.env.SECRET, { expiresIn: '3d' })
@@ -297,4 +298,19 @@ const firstNameAndLastname = async (req, res) => {
     } 
 }
 
-module.exports = { signupUser,updateUser, loginUser,FindAllUser ,createToken,firstNameAndLastname,signupUserGoogle,loginUserGoogle,DeleteUser,BannAnUser,  forgotpwd, resetpwd,findUser,findUserById}
+const searchUser = async(req,res)=> {
+    let result = await User.find({
+        "$or":[
+            {
+                firstName :{$regex:req.params.key}
+            } ,
+            {
+                lastName : {$regex:req.params.key}
+            }
+        ]
+    }); 
+    res.send(result)
+      }
+
+
+module.exports = { searchUser ,signupUser,updateUser, loginUser,FindAllUser ,createToken,firstNameAndLastname,signupUserGoogle,loginUserGoogle,DeleteUser,BannAnUser,  forgotpwd, resetpwd,findUser,findUserById}

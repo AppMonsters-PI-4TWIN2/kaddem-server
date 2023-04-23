@@ -71,7 +71,7 @@ mongoose.connect(process.env.MONGO_URI)
           //notify everyone about online people
           [...wss.clients].forEach(client => {
            client.send(JSON.stringify({
-             online : [...wss.clients].map(c =>({userId:c.userId,email:c.email,firstName :c.firstName, lastName :c.lastName}))
+             online : [...wss.clients].map(c =>({userId:c.userId,email:c.email}))
           }))
           } )
        }
@@ -105,11 +105,9 @@ const cookies = req.headers.cookie;
       const token = tokenCookieString.split('=')[1];
       if (token) {
           jwt.verify(token, jwtSecret, {}, (err, userData) => {
-          const {userId, email,firstName , lastName} = userData;
+          const {userId, email} = userData;
           connection.userId = userId;
           connection.email = email ;
-          connection.firstName = firstName ;
-          connection.lastName =lastName ; 
           console.log("useerrrrr daaaaata")
           console.log(userData)
         });

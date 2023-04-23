@@ -101,5 +101,17 @@ const validInvestment =async (req, res) => {
     }
   }
 
+  const searchInvestment = async(req,res)=> {
+    let result = await Investment.find({
+        "$or":[
+           
+            {
+                isValid : {$regex:req.params.key}
+            }
+        ]
+    }); 
+    res.send(result)
+      }
 
-module.exports ={findAllInvestment,addInvestment,updateInvestment ,DeleteInvestment,updateInvestment,validInvestment}
+
+module.exports ={searchInvestment,findAllInvestment,addInvestment,updateInvestment ,DeleteInvestment,updateInvestment,validInvestment}

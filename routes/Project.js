@@ -8,7 +8,8 @@ const {
     projectName,
     decreaseProjectMontant,
 
-    FindAllProjects
+    FindAllProjects,
+    search
 
 } = require('../controllers/projectController')
 
@@ -36,4 +37,6 @@ router.put('/amount/:id/:amount',decreaseProjectMontant)
 
 router.get('/name/:id', projectName);
 
+ router.get('/search/:key',search)
+ 
 module.exports = router

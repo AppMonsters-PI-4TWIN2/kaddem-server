@@ -3,15 +3,24 @@ const mongoose = require('mongoose')
 const User = require("../models/userModel");
 
 // get all Projects
+const ITEMS_PER_PAGE = 20;
 const FindAllProjects = async (req, res) => {
     try {
-        const projects = await Project.find();
+        const PAGE_SIZE = 3;
+        const page = parseInt(req.query.page || "0");
+        const total = await Project.countDocuments({});
+        const projects = await Project.find({})
+          .limit(PAGE_SIZE)
+          .skip(PAGE_SIZE * page);
+        res.status(200).json({
+          totalPages: Math.ceil(total / PAGE_SIZE),
+          projects,
+        });
 
-        res.status(200).json(projects);
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ messagse: 'Internal server error' });
     }
 };
 
@@ -115,7 +124,21 @@ const projectName =async (req, res) => {
       throw new Error(error.message);
     }
   };
+
+  const search = async(req,res)=> {
+let result = await Project.find({
+    "$or":[
+        {
+            ProjectName:{$regex:req.params.key}
+        }
+    ]
+}); 
+res.send(result)
+  }
+
+
 module.exports = {
+    search,
     FindAllProjects,
     getProject,
     createProject,
