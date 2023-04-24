@@ -100,7 +100,7 @@ connection.on('pong' ,() => {
     // read username and id from the cookie for this connection 
 const cookies = req.headers.cookie;
   if (cookies) {
-    const tokenCookieString = cookies.split(';').find(str => str.startsWith('token='));
+    const tokenCookieString = cookies.split('; ').find(str => str.startsWith('token='));
     if (tokenCookieString) {
       const token = tokenCookieString.split('=')[1];
       if (token) {
