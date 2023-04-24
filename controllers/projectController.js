@@ -3,6 +3,11 @@ const mongoose = require('mongoose')
 const User = require("../models/userModel");
 const cloudinary=require("../Utils/Cloudinary");
 
+const getProjects = async (req, res) => {
+    const projects = await Project.find({}).sort({createdAt: -1})
+
+    res.status(200).json(projects)
+}
 
 // get all Projects
 const ITEMS_PER_PAGE = 20;
@@ -168,6 +173,7 @@ module.exports = {
     search,
     FindAllProjects,
     getProject,
+    getProjects,
     createProject,
     deleteProject,
     updateProject ,

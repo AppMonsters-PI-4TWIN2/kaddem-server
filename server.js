@@ -80,9 +80,7 @@ mongoose.connect(process.env.MONGO_URI)
 const wss = new ws.WebSocketServer({server})    
 wss.on('connection',(connection,req) => {
 
-
-
-
+//console.log(req.headers)
 connection.isAlive = true ; 
 connection.timer =  setInterval(() => {
   connection.ping() ; 
@@ -100,7 +98,16 @@ connection.on('pong' ,() => {
     // read username and id from the cookie for this connection 
 const cookies = req.headers.cookie;
   if (cookies) {
-    const tokenCookieString = cookies.split('; ').find(str => str.startsWith('token='));
+
+   const tokenCookieString = cookies.split('; ').find(str => str.startsWith('token='));
+   // console.log("notifyAboutOnlinePeople")
+   // console.log(tokenCookieString)
+//   const tokenCookieString = cookies.split('; ').find(str => str.startsWith('token='));
+
+// const token = tokenCookieString ? tokenCookieString.replace(/^token=/, '') : null;
+// console.log(token);
+// console.log(tokenCookieString)
+
     if (tokenCookieString) {
       const token = tokenCookieString.split('=')[1];
       if (token) {
@@ -108,8 +115,8 @@ const cookies = req.headers.cookie;
           const {userId, email} = userData;
           connection.userId = userId;
           connection.email = email ;
-          console.log("useerrrrr daaaaata")
-          console.log(userData)
+        //  console.log("useerrrrr daaaaata")
+        //  console.log(userData)
         });
       }
     }

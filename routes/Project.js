@@ -7,7 +7,7 @@ const {
     updateProject,
     projectName,
     decreaseProjectMontant,
-
+    getProjects,
 
     FindAllProjects,
     search,
@@ -21,6 +21,7 @@ const router = express.Router()
 
 // GET all Projects
 router.get('/projects', FindAllProjects)
+router.get('/getProjects', getProjects)
 
 // GET a single Project
 router.get('/:ProjectName', getProject)
