@@ -5,6 +5,8 @@ dotenv.config()
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const userModel = require('../models/userModel')
+const cloudinary=require("../Utils/Cloudinary");
+
 
 const createToken = (_id) => {
     return jwt.sign({_id}, process.env.SECRET, { expiresIn: '3d' })
