@@ -14,7 +14,7 @@ const FindAllPosts = async (req, res) => {
 
       const { LoggedInUser } = req.params;
       // First, find all the investments made by the investor
-      const investments = await Investment.find({ idUser: LoggedInUser });
+      const investments = await Investment.find({ idUser: LoggedInUser ,isValid:"accepted" });
 
         // Create an array to store all the project IDs
       const projectIds = [];
