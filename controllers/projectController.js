@@ -1,6 +1,8 @@
 const Project = require('../models/Project')
 const mongoose = require('mongoose')
 const User = require("../models/userModel");
+const cloudinary=require("../Utils/Cloudinary");
+
 const getProjects = async (req, res) => {
     const projects = await Project.find({}).sort({createdAt: -1})
 
@@ -64,7 +66,19 @@ const createProject = async (req, res) => {
 
     // add to the database
     try {
-        const project = await Project.create({ ProjectName, Description, DetailedDescription,Team,LegalConsiderations,AmountAlreadyRaised,Category,ImpactOrGoal,FundingGoal,ProjectLocation,FundingModel,Website,Stage,FundingDeadline,Creator,Image })
+        //external api upload image from the cloudinary
+        const result= await cloudinary.uploader.upload(Image,{
+            folder:"ProjectAssets",
+            //width:300,
+           // crop:"scale"
+        });
+        const project = await Project.create({ ProjectName, Description, DetailedDescription,Team,LegalConsiderations,AmountAlreadyRaised,Category,ImpactOrGoal,FundingGoal,ProjectLocation,FundingModel,Website,Stage,FundingDeadline,Creator,
+            Image:{
+            public_id:result.public_id,
+                url:result.secure_url
+
+            }
+        })
         res.status(200).json(project)
     } catch (error) {
         res.status(400).json({ error: error.message })
@@ -108,7 +122,7 @@ const projectName =async (req, res) => {
         return res.status(404).json({ message: 'Project not found' });
       }
       res.json({ projectName: project.ProjectName, category: project.Category, creator :project.Creator,id:project.id});
- 
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Une erreur est survenue.' });
@@ -137,7 +151,7 @@ let result = await Project.find({
             ProjectName:{$regex:req.params.key}
         }
     ]
-}); 
+});
 res.send(result)
   }
 

@@ -98,6 +98,7 @@ connection.on('pong' ,() => {
     // read username and id from the cookie for this connection 
 const cookies = req.headers.cookie;
   if (cookies) {
+
    const tokenCookieString = cookies.split('; ').find(str => str.startsWith('token='));
    // console.log("notifyAboutOnlinePeople")
    // console.log(tokenCookieString)
@@ -106,6 +107,7 @@ const cookies = req.headers.cookie;
 // const token = tokenCookieString ? tokenCookieString.replace(/^token=/, '') : null;
 // console.log(token);
 // console.log(tokenCookieString)
+
     if (tokenCookieString) {
       const token = tokenCookieString.split('=')[1];
       if (token) {
