@@ -58,6 +58,10 @@ const projectSchema = new Schema({
     FundingDeadline:{
         type: Date
     },
+    IsVerified:{
+        type: Number,
+        default:0
+    },
     Creator : {
         type : mongoose.Schema.Types.ObjectId,ref:'User'
     } ,
