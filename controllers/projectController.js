@@ -4,7 +4,7 @@ const User = require("../models/userModel");
 const cloudinary=require("../Utils/Cloudinary");
 
 const getProjects = async (req, res) => {
-    const projects = await Project.find({}).sort({createdAt: -1})
+    const projects = await Project.find({}).populate('Creator', 'userName').sort({createdAt: -1})
 
     res.status(200).json(projects)
 }
@@ -13,7 +13,7 @@ const getProjects = async (req, res) => {
 const ITEMS_PER_PAGE = 20;
 const FindAllProjects = async (req, res) => {
     try {
-        const PAGE_SIZE = 3;
+        const PAGE_SIZE = 6;
         const page = parseInt(req.query.page || "0");
         const total = await Project.countDocuments({});
         const projects = await Project.find({})
