@@ -4,7 +4,7 @@ const User = require("../models/userModel");
 const cloudinary=require("../Utils/Cloudinary");
 
 const getProjects = async (req, res) => {
-    const projects = await Project.find({}).sort({createdAt: -1})
+    const projects = await Project.find({}).populate('Creator', 'userName').sort({createdAt: -1})
 
     res.status(200).json(projects)
 }
@@ -13,7 +13,7 @@ const getProjects = async (req, res) => {
 const ITEMS_PER_PAGE = 20;
 const FindAllProjects = async (req, res) => {
     try {
-        const PAGE_SIZE = 3;
+        const PAGE_SIZE = 6;
         const page = parseInt(req.query.page || "0");
         const total = await Project.countDocuments({});
         const projects = await Project.find({})
@@ -101,7 +101,21 @@ const deleteProject = async (req, res) => {
     res.status(200).json(project)
 
 }
+const VerifyProject = async (req, res) => {
+    const { id } = req.params
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({error: 'No such project'})
+    }
+
+    const project = await Project.findByIdAndUpdate(id, { IsVerified: 1 }, { new: true })
+
+    if (!project) {
+        return res.status(400).json({error: 'No such project'})
+    }
+
+    res.status(200).json(project)
+}
 const updateProject = async (req, res) => {
     const { ProjectName } = req.params
 
@@ -180,5 +194,6 @@ module.exports = {
     projectName ,
     decreaseProjectMontant,
     getProjectsByCreator,
-    incrementAmountAlreadyRaised
+    incrementAmountAlreadyRaised,
+    VerifyProject
 }
