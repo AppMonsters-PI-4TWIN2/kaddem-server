@@ -5,7 +5,10 @@ const mongoose = require ("mongoose") ;
 const Comment = require ("../models/commentModel.js") ;
 const Investment = require ("../models/investment") ;
 const User = require ("../models/userModel.js") ;
+const  badWordsFilter = require ("bad-words");
 dotenv.config()
+
+let baadWordsFilter = new badWordsFilter();
 
 
 const FindAllPostsByProj = async (req, res) => {
@@ -115,12 +118,14 @@ const FindAllPosts = async (req, res) => {
      const decodedToken = jwt.decode(token ,process.env.secret);
      const userId = decodedToken.userId;
      console.log(userId)
+
+     const sanitizedBody = baadWordsFilter.clean(caption);
      // upload the image to the server
      const image = `${req.protocol}://localhost:4000/posts/${
            req.file.filename
          }`
          //
-     const newPost = new Post({ caption: caption, owner: userId , image,project:project });
+     const newPost = new Post({ caption: sanitizedBody, owner: userId , image,project:project });
      try {
          await newPost.save();
         res.status(201).json(newPost);
@@ -206,10 +211,11 @@ const FindAllPosts = async (req, res) => {
   if (!post) {
     return res.status(404).send(`No post with id: ${postId}`);
   }
+  const sanitizedBody = baadWordsFilter.clean(content);
   const comment = new Comment({
     owner: userId,
     post: postId,
-    content,
+    content :sanitizedBody,
   });
   post.comments.push(comment);
   post.numberOfComments++;
