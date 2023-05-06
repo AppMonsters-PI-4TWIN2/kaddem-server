@@ -12,15 +12,11 @@ const router = express.Router()
 
 // login route
 router.post('/login',loginUser)
-
 // signup route
 router.post('/signup', signupUser)
-
 //forgot password
 router.post('/forgotpwd', forgotpwd)
-
 //reset password
-
 router.put('/resetpwd', resetpwd)
 //update user
 router.put('/updateuser',updateUser)

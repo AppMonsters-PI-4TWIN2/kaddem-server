@@ -316,12 +316,13 @@ const firstNameAndLastname = async (req, res) => {
 
 const searchUser = async(req,res)=> {
     let result = await User.find({
+        role: 'user' ,
         "$or":[
             {
-                firstName :{$regex:req.params.key}
+                email :{$regex:req.params.key}
             } ,
             {
-                lastName : {$regex:req.params.key}
+                userName : {$regex:req.params.key}
             }
         ]
     }); 

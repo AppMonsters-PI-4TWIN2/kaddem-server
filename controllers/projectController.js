@@ -155,6 +155,19 @@ let result = await Project.find({
 res.send(result)
   }
 
+  const searchBack = async(req,res)=> {
+    let result = await Project.find({
+        "$or":[
+            {
+                ProjectName:{$regex:req.params.key}
+            },
+            {
+                ProjectLocation:{$regex:req.params.key}
+            }
+        ]
+    }).populate('Creator', 'userName').sort({createdAt: -1});
+    res.send(result)
+      }
 
 const incrementAmountAlreadyRaised = async (req, res) => {
     const projectId = req.params.id; // get the project ID from the request parameters
@@ -180,5 +193,6 @@ module.exports = {
     projectName ,
     decreaseProjectMontant,
     getProjectsByCreator,
-    incrementAmountAlreadyRaised
+    incrementAmountAlreadyRaised,
+    searchBack
 }

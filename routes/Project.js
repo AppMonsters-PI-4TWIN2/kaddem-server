@@ -11,8 +11,9 @@ const {
 
     FindAllProjects,
     search,
-
+    searchBack,
     incrementAmountAlreadyRaised,
+    
     
 
 } = require('../controllers/projectController')
@@ -45,5 +46,6 @@ router.put('/amount/:id/:amount',decreaseProjectMontant)
 router.get('/name/:id', projectName);
 
  router.get('/search/:key',search)
+ router.get('/searchBack/:key',searchBack)
  
 module.exports = router
