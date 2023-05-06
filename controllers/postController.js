@@ -5,14 +5,17 @@ const mongoose = require ("mongoose") ;
 const Comment = require ("../models/commentModel.js") ;
 const Investment = require ("../models/investment") ;
 const User = require ("../models/userModel.js") ;
+const  badWordsFilter = require ("bad-words");
 dotenv.config()
 
+let baadWordsFilter = new badWordsFilter();
 
 
-const FindAllPosts = async (req, res) => {
+const FindAllPostsByProj = async (req, res) => {
   try {
 
       const { LoggedInUser } = req.params;
+      const {projectId } = req.body;
       // First, find all the investments made by the investor
       const investments = await Investment.find({ idUser: LoggedInUser ,isValid:"accepted" });
 
@@ -25,9 +28,47 @@ const FindAllPosts = async (req, res) => {
       });
 
       // Use the projectIds array to find all the posts of the projects the investor has invested in
+      const posts = await Post.find({ project: projectId }).populate({
+        path: 'owner',
+        select: 'userName avatar',
+      }).sort({ createdAt: 1 });
+
+// posts variable now contains all the posts created before the current date, for the projects the investor has invested in
+
+   res.status(200).json(posts);
+ 
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+
+const FindAllPosts = async (req, res) => {
+  try {
+
+      const { LoggedInUser} = req.params;
+
+      // First, find all the investments made by the investor
+      const investments = await Investment.find({ idUser: LoggedInUser ,isValid:"accepted" });
+
+        // Create an array to store all the project IDs
+      const projectIds = [];
+
+        // Loop through each investment and push its project ID to the projectIds array
+      investments.forEach(investment => {
+          projectIds.push(investment.idProject);
+      });
+
+      // Use the projectIds array to find all the posts of the projects the investor has invested in and the posts of the project that id is given in params
+
+
       const posts = await Post.find({
           $or: [
               { project: { $in: projectIds } }, // Find posts where the project ID is in projectIds
+
               { owner: LoggedInUser } // Find posts where the owner is the LoggedInUser
           ]
       }).populate({
@@ -77,12 +118,14 @@ const FindAllPosts = async (req, res) => {
      const decodedToken = jwt.decode(token ,process.env.secret);
      const userId = decodedToken.userId;
      console.log(userId)
+
+     const sanitizedBody = baadWordsFilter.clean(caption);
      // upload the image to the server
      const image = `${req.protocol}://localhost:4000/posts/${
            req.file.filename
          }`
          //
-     const newPost = new Post({ caption: caption, owner: userId , image,project:project });
+     const newPost = new Post({ caption: sanitizedBody, owner: userId , image,project:project });
      try {
          await newPost.save();
         res.status(201).json(newPost);
@@ -168,10 +211,11 @@ const FindAllPosts = async (req, res) => {
   if (!post) {
     return res.status(404).send(`No post with id: ${postId}`);
   }
+  const sanitizedBody = baadWordsFilter.clean(content);
   const comment = new Comment({
     owner: userId,
     post: postId,
-    content,
+    content :sanitizedBody,
   });
   post.comments.push(comment);
   post.numberOfComments++;
@@ -214,8 +258,8 @@ const FindAllPosts = async (req, res) => {
   };
 
   // Get comments of a post
- const getComments = async (req, res) => {
-    const {postId} = req.body;
+  const getComments = async (req, res) => {
+    const {postId} = req.params;
   
     try {
        await Comment.find({ post: postId })
@@ -284,7 +328,7 @@ const FindAllPosts = async (req, res) => {
     return res.status(200).json(comment);
   };
 
-  module.exports = {FindAllPosts,
+  module.exports = {FindAllPostsByProj, FindAllPosts,
     getPosts,
     createPost ,
     deletePost,

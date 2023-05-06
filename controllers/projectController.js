@@ -101,7 +101,21 @@ const deleteProject = async (req, res) => {
     res.status(200).json(project)
 
 }
+const VerifyProject = async (req, res) => {
+    const { id } = req.params
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({error: 'No such project'})
+    }
+
+    const project = await Project.findByIdAndUpdate(id, { IsVerified: 1 }, { new: true })
+
+    if (!project) {
+        return res.status(400).json({error: 'No such project'})
+    }
+
+    res.status(200).json(project)
+}
 const updateProject = async (req, res) => {
     const { ProjectName } = req.params
 
@@ -194,5 +208,6 @@ module.exports = {
     decreaseProjectMontant,
     getProjectsByCreator,
     incrementAmountAlreadyRaised,
-    searchBack
+    searchBack,
+    VerifyProject,
 }

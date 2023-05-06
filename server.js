@@ -3,6 +3,7 @@ const passport = require('passport')
 const express = require('express')
 const mongoose = require('mongoose')
 const userRoutes = require('./routes/user')
+const statRoutes = require('./routes/stat')
 const listUser = require('./routes/listUser')
 const User = require('./models/userModel')
 const chatRoute =require('./routes/chat')
@@ -33,6 +34,7 @@ app.use((req, res, next) => {
 
 // routes
 app.use('/api/user', userRoutes)
+app.use('/api/stat',statRoutes )
 app.use('/list',listUser)
 app.use('/chat',chatRoute)
 app.use('/report',reportRoute)

@@ -13,6 +13,8 @@ const {
     search,
     searchBack,
     incrementAmountAlreadyRaised,
+
+    incrementAmountAlreadyRaised, VerifyProject,
     
     
 
@@ -42,7 +44,7 @@ router.put('/:ProjectName', updateProject)
 // UPDATE a Project
 router.patch('/incrementAmountAlreadyRaised/:id/:montant', incrementAmountAlreadyRaised)
 router.put('/amount/:id/:amount',decreaseProjectMontant)
-
+router.patch('/verify/:id',VerifyProject)
 router.get('/name/:id', projectName);
 
  router.get('/search/:key',search)
