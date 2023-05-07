@@ -314,19 +314,20 @@ const firstNameAndLastname = async (req, res) => {
     } 
 }
 
-const searchUser = async(req,res)=> {
+const searchUser = async (req, res) => {
     let result = await User.find({
-        "$or":[
-            {
-                firstName :{$regex:req.params.key}
-            } ,
-            {
-                lastName : {$regex:req.params.key}
-            }
-        ]
-    }); 
-    res.send(result)
-      }
-
+      $and: [
+        { role: "user" },
+        {
+          $or: [
+            { lastName: { $regex: req.params.key } },
+            { firstName: { $regex: req.params.key } }
+          ]
+        }
+      ]
+    });
+    res.send(result);
+  }
+  
 
 module.exports = { searchUser ,signupUser,updateUser, loginUser,FindAllUser ,createToken,firstNameAndLastname,signupUserGoogle,loginUserGoogle,DeleteUser,BannAnUser,  forgotpwd, resetpwd,findUser,findUserById}

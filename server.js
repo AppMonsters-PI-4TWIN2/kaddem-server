@@ -7,6 +7,7 @@ const statRoutes = require('./routes/stat')
 const listUser = require('./routes/listUser')
 const User = require('./models/userModel')
 const chatRoute =require('./routes/chat')
+const reportRoute=require('./routes/report')
 const investmentRoute = require('./routes/investment')
 //chat 
 const fs =require('fs')
@@ -37,6 +38,7 @@ app.use('/api/stat',statRoutes )
 app.use('/list',listUser)
 app.use('/chat',chatRoute)
 
+app.use('/report',reportRoute)
 app.use('/investment',investmentRoute)
 
 

@@ -12,7 +12,26 @@ const findAllInvestment = async (req ,res) => {
    
         }
 
+        
 }
+
+const findValidInvestmentsByProjectId = async (req, res) => {
+  const idProject = req.params.idProject;
+  try {
+    const data = await Investment.find({ idProject: idProject, isValid: 'accepted'  }).populate({
+      path: 'idUser',
+      select: 'userName',
+    }).sort({ createdAt: 1 });
+    res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+
+
 
 const addInvestment = async (req, res) => {
     try {
@@ -114,4 +133,4 @@ const validInvestment =async (req, res) => {
       }
 
 
-module.exports ={searchInvestment,findAllInvestment,addInvestment,updateInvestment ,DeleteInvestment,updateInvestment,validInvestment}
+module.exports ={findValidInvestmentsByProjectId,searchInvestment,findAllInvestment,addInvestment,updateInvestment ,DeleteInvestment,updateInvestment,validInvestment}

@@ -2,13 +2,13 @@ const mongoose =require('mongoose') ;
 const InvestmentSchema = new mongoose.Schema({
 idUser:{
     type: String ,
-    // type: mongoose.Schema.Types.ObjectId ,
-    // ref:'User'
+    type: mongoose.Schema.Types.ObjectId ,
+    ref:'User'
  } ,
 idProject : {
     
     type: String ,
-    // type : mongoose.Schema.Types.ObjectId,
+     type : mongoose.Schema.Types.ObjectId,
     // ref:'Project'
 } , 
 montant :{

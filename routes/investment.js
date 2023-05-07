@@ -1,5 +1,5 @@
 const express = require('express')
-const { findAllInvestment, addInvestment, DeleteInvestment, updateInvestment, validInvestment, searchInvestment } = require('../controllers/investmentController')
+const { findAllInvestment, addInvestment, DeleteInvestment, updateInvestment, validInvestment, searchInvestment, findValidInvestmentsByProjectId } = require('../controllers/investmentController')
 const requireAuth = require('../middleware/requireAuth')
 const investment = require('../models/investment')
 const router = express.Router()
@@ -13,5 +13,5 @@ router.post('/update/:id',updateInvestment)
 router.put('/valid/:id',validInvestment)
 router.put('/investment/:id',updateInvestment);
 router.get('/search/:key',searchInvestment)
-
+router.get('/findById/:idProject',findValidInvestmentsByProjectId)
 module.exports = router
