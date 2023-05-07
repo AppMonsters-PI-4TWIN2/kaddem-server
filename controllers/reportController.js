@@ -5,7 +5,7 @@ const findAllReport = async (req ,res) => {
     try{
           const data =await ReportModel.find().populate('reported','userName')
           .populate('reportedBy','userName') 
-          .populate('project','ProjectName').sort({createdAt: -1});  
+          .sort({createdAt: -1});
           res.status(201).json(data);
           }catch(error){
               console.log(error.message) ; 
@@ -17,7 +17,7 @@ const findAllReport = async (req ,res) => {
 
   const addReport = async (req, res) => {
     try {
-        const { reported, reportedBy,isTraited,project, reason } = req.body;
+        const { reported, reportedBy,isTraited, reason } = req.body;
 
         // const userExists = await User.findOne({ email });
 
@@ -27,7 +27,6 @@ const findAllReport = async (req ,res) => {
             reported,
             reportedBy,
             reason,
-            project,
             isTraited
         });
 

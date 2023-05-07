@@ -1,5 +1,5 @@
 const express = require('express')
-const { findAllInvestment, addInvestment, DeleteInvestment, updateInvestment, validInvestment, searchInvestment, findValidInvestmentsByProjectId } = require('../controllers/investmentController')
+const { findAllInvestment,projectInvestedInByUserId, statsInvestmentByUserId,statsInvestmentByCreatorId,addInvestment, DeleteInvestment, updateInvestment, validInvestment, searchInvestment, findValidInvestmentsByProjectId } = require('../controllers/investmentController')
 const requireAuth = require('../middleware/requireAuth')
 const investment = require('../models/investment')
 const router = express.Router()
@@ -14,4 +14,7 @@ router.put('/valid/:id',validInvestment)
 router.put('/investment/:id',updateInvestment);
 router.get('/search/:key',searchInvestment)
 router.get('/findById/:idProject',findValidInvestmentsByProjectId)
+router.get('/projectInvestedInByUserId/:id',projectInvestedInByUserId)
+router.get('/statsInvestmentByUserId/:id',statsInvestmentByUserId)
+router.get('/statsInvestmentByCreatorId/:id',statsInvestmentByCreatorId)
 module.exports = router

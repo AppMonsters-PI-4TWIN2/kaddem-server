@@ -1,6 +1,6 @@
 const investment = require("../models/investment");
 const Investment = require("../models/investment");
-
+const Project = require('../models/Project')
 const findAllInvestment = async (req ,res) => {
 
   try{
@@ -119,7 +119,99 @@ const validInvestment =async (req, res) => {
       return res.status(500).json({ error: 'Server error' });
     }
   }
+const projectInvestedInByUserId = async (req, res) => {
+    const { id } = req.params;
 
+    try {
+        const investments = await Investment.find({ idUser: id, isValid: 'accepted' });
+        const projectNames = [];
+
+        for (const investment of investments) {
+            if (investment.idProject) {
+                const project = await Project.findById(investment.idProject);
+                if (project) {
+                    projectNames.push(project.ProjectName);
+                }
+            }
+        }
+
+        res.json(projectNames);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+const statsInvestmentByCreatorId = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const projects = await Project.find({ Creator: id });
+
+        let countAcceptedInvestment = 0;
+        let countPendingInvestment = 0;
+        let totalAmountReceived = 0;
+
+        await Promise.all(
+            projects.map(async (project) => {
+                const investments = await Investment.find({
+                    idProject: project._id,
+                    isValid: "accepted",
+                });
+
+                countAcceptedInvestment += investments.length;
+
+                const pendingInvestments = await Investment.find({
+                    idProject: project._id,
+                    isValid: "pending",
+                });
+
+                countPendingInvestment += pendingInvestments.length;
+
+                investments.forEach((investment) => {
+                    totalAmountReceived += investment.montant;
+                });
+            })
+        );
+
+        return res.json({
+            countAcceptedInvestment,
+            countPendingInvestment,
+            totalAmountReceived,
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+const statsInvestmentByUserId = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const investments = await Investment.find({ idUser: id});
+        let countRejectedInvestments = 0;
+        let countAcceptedInvestments = 0;
+        let countAmountInvested = 0;
+
+        investments.forEach((investment) => {
+            if (investment.isValid === "rejected") {
+                countRejectedInvestments++;
+            } else if (investment.isValid === "accepted") {
+                countAcceptedInvestments++;
+                countAmountInvested += investment.montant;
+            }
+        });
+
+        res.json({
+            countRejectedInvestments,
+            countAcceptedInvestments,
+            countAmountInvested
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
   const searchInvestment = async(req,res)=> {
     let result = await Investment.find({
         "$or":[
@@ -133,4 +225,4 @@ const validInvestment =async (req, res) => {
       }
 
 
-module.exports ={findValidInvestmentsByProjectId,searchInvestment,findAllInvestment,addInvestment,updateInvestment ,DeleteInvestment,updateInvestment,validInvestment}
+module.exports ={findValidInvestmentsByProjectId,searchInvestment,findAllInvestment,addInvestment,updateInvestment ,DeleteInvestment,updateInvestment,validInvestment,projectInvestedInByUserId, statsInvestmentByUserId,statsInvestmentByCreatorId}

@@ -13,7 +13,7 @@ const postSchema = new Schema({
          required: true,
      },
     project : {
-    type : mongoose.Schema.Types.ObjectId,ref:'projects'
+    type : mongoose.Schema.Types.ObjectId,ref:'Project'
     },
 image: {
          type: String,
