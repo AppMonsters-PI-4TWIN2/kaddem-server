@@ -173,6 +173,7 @@ const editPost = async (req, res) => {
 }
 
 const likePost = async (req, res) => {
+    try {
     const {token ,id } = req.body;
     const decodedToken = jwt.decode(token ,process.env.secret);
     const userId = decodedToken.id;
@@ -197,6 +198,10 @@ const likePost = async (req, res) => {
     await post.save();
 
     res.status(200).json(post);
+    }
+    catch (error) {
+        return res.status(500).json({ message: "Internal server error" });
+    }
 }
 
 
