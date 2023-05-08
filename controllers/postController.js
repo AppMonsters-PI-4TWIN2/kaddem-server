@@ -31,7 +31,7 @@ const FindAllPostsByProj = async (req, res) => {
         const posts = await Post.find({ project: projectId }).populate({
             path: 'owner',
             select: 'userName avatar',
-        }).sort({ createdAt: 1 });
+        }).sort({ createdAt: -1 });
 
 // posts variable now contains all the posts created before the current date, for the projects the investor has invested in
 
@@ -77,7 +77,7 @@ const FindAllPosts = async (req, res) => {
         }).populate({
             path: 'project',
             select: 'ProjectName Image',
-        }).sort({ createdAt: 1 });
+        }).sort({ createdAt: -1 });
 
 // posts variable now contains all the posts created before the current date, for the projects the investor has invested in
 
@@ -123,10 +123,13 @@ const createPost = async (req, res) => {
     console.log(userId)
 
     const sanitizedBody = baadWordsFilter.clean(caption);
+    let image;
     // upload the image to the server
-    const image = `${req.protocol}://localhost:4000/posts/${
-        req.file.filename
-    }`
+    if (req.file) {
+        image = `${req.protocol}://localhost:4000/posts/${
+            req.file.filename
+        }`
+    }
     //
     const newPost = new Post({ caption: sanitizedBody, owner: userId , image,project:project });
     try {
